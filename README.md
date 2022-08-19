@@ -19,15 +19,19 @@ This repository is to create api's using Sanctum library for authentication user
 To get all products listing.
     Method => GET
     Route => /products
+
 To get details of specific product.
     Method => GET
     Route => /products/{product_id}
+
 Search product by its name.
     Method => GET
     Route => /products/search/{product_name}
+
 Create new user.
     Method => POST
     Route => /register
+    
 Login with user credentials.
     Method => POST
     Route => /login
