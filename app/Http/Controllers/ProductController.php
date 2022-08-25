@@ -12,9 +12,9 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id = Null)
     {
-        return Product::all();
+        return $id ? Product::find($id) : Product::all();
     }
 
     /**
@@ -54,6 +54,11 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::find($id);
+        if (!$product) {
+            return response([
+                "message" => "Record not found"
+            ],404);
+        }
         $product->update($request->all());
         return $product;
     }
@@ -66,7 +71,6 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        die("yes");
         return Product::destroy($id);
     }
 
@@ -79,5 +83,21 @@ class ProductController extends Controller
     public function search($name)
     {
         return Product::where('name', 'like', '%'.$name.'%')->get();
+    }
+
+    /**
+     * Store image of a product
+     *
+     * @param  str  $name
+     * @return \Illuminate\Http\Response
+     */
+    public function storeImage(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:jpg,jpeg,png,gif|max:2048'
+        ]);
+        $result = $request->file('file')->store('productImages');
+        $response = $result ? ["filePath" => $result] : ["message" => "Unable to save file"];
+        return response($response,201);
     }
 }
